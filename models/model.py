@@ -80,7 +80,7 @@ def notes_to_midi(
         prev_start = start
 
     pm.instruments.append(instrument)
-    pm.write("{out_file}".format(out_file=out_file))
+    pm.write("{out_file}.mid".format(out_file=out_file))
 
     return pm
 
