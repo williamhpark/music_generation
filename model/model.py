@@ -8,7 +8,7 @@ import tensorflow as tf
 
 
 def midi_to_notes(midi_file: str) -> pd.DataFrame:
-    """Extracts the notes from a MIDI file and transfer the information to a dataframe
+    """Extracts the notes from a MIDI file and transfers the information to a dataframe
 
     We will use three variables to represent a note when training the model: pitch, step and duration.
     The pitch is the perceptual quality of the sound as a MIDI note number.
@@ -81,75 +81,33 @@ def notes_to_midi(
 
     pm.instruments.append(instrument)
     pm.write(out_file)
-
     return pm
-
-
-def predict_next_note(
-    notes: np.ndarray, model: tf.keras.Model, temperature: float = 1.0
-) -> int:
-    """Generates information for the next predicted note
-
-    Args:
-        notes (np.ndarray): Initial sequence of notes
-        model (tf.keras.Model): Model used to make the prediction
-        temperature (float, optional): Used to control the randomness of notes generated. Defaults to 1.0.
-
-    Returns:
-        int: _description_
-    """
-
-    if notes and model:
-        assert temperature > 0
-
-        # Add batch dimension
-        inputs = tf.expand_dims(notes, 0)
-
-        predictions = model.predict(inputs)
-        pitch_logits = predictions["pitch"]
-        step = predictions["step"]
-        duration = predictions["duration"]
-
-        pitch_logits /= temperature
-        pitch = tf.random.categorical(pitch_logits, num_samples=1)
-        pitch = tf.squeeze(pitch, axis=-1)
-        duration = tf.squeeze(duration, axis=-1)
-        step = tf.squeeze(step, axis=-1)
-
-        # `step` and `duration` values should be non-negative
-        step = tf.maximum(0, step)
-        duration = tf.maximum(0, duration)
-
-        return int(pitch), float(step), float(duration)
-    else:
-        raise Exception("Model or training dataset are not defined")
 
 
 class MusicGenerationRNN:
     def __init__(
         self,
-        filenames,
-        seed=42,
-        sampling_rate=16000,
-        num_files=5,
-        seq_length=25,
-        vocab_size=128,
-        batch_size=64,
-        learning_rate=0.005,
-        epochs=50,
+        filenames: str,
+        seed: int = 42,
+        sampling_rate: int = 16000,
+        num_files: int = 5,
+        seq_length: int = 25,
+        vocab_size: int = 128,
+        batch_size: int = 64,
+        learning_rate: float = 0.005,
+        epochs: int = 50,
     ):
-        self.filenames = filenames
-        self.seed = seed
-        self.sampling_rate = sampling_rate
-        self.num_files = num_files
-        self.seq_length = seq_length
-        self.vocab_size = vocab_size
-        self.batch_size = batch_size
-        self.learning_rate = learning_rate
-        self.epochs = epochs
+        self.filenames = filenames  # Filenames for MIDI files to process
+        self.seed = seed  # Sampling
+        self.sampling_rate = sampling_rate  # Sampling rate for audio playback
+        self.num_files = num_files  # Number of MIDI files to process
+        self.seq_length = seq_length  # Length of audio sequence
+        self.vocab_size = vocab_size  # Size of vocabulary (defaults to 128, number of pitches supported by `pretty_midi`)
+        self.batch_size = batch_size  # Size of batches for training
+        self.learning_rate = learning_rate  # Learning rate of neural network
+        self.epochs = epochs  # Number of epochs during training
 
         self.train_ds = None
-        self.model = None
 
         # Set random seed
         tf.random.set_seed(seed)
@@ -221,7 +179,7 @@ class MusicGenerationRNN:
 
         self.train_ds = train_ds
 
-    def create_model(self):
+    def create_model(self) -> tf.keras.Model:
         # A custom loss function based on mean squared error that encourages the model to output non-negative values
         def mse_with_positive_pressure(y_true: tf.Tensor, y_pred: tf.Tensor):
             mse = (y_true - y_pred) ** 2
@@ -259,55 +217,44 @@ class MusicGenerationRNN:
             optimizer=optimizer,
         )
 
-        self.model = model
+        return model
 
-        return self.model
+    def train(self, model: tf.keras.Model):
+        callbacks = [
+            tf.keras.callbacks.ModelCheckpoint(
+                filepath="./training_checkpoints/ckpt_{epoch}",
+                save_weights_only=True,
+            ),
+            tf.keras.callbacks.EarlyStopping(
+                monitor="loss", patience=5, verbose=1, restore_best_weights=True
+            ),
+        ]
 
-    def train(self):
-        if self.model and self.train_ds:
-            callbacks = [
-                tf.keras.callbacks.ModelCheckpoint(
-                    filepath="./training_checkpoints/ckpt_{epoch}",
-                    save_weights_only=True,
-                ),
-                tf.keras.callbacks.EarlyStopping(
-                    monitor="loss", patience=5, verbose=1, restore_best_weights=True
-                ),
-            ]
+        model.fit(
+            self.train_ds,
+            epochs=self.epochs,
+            callbacks=callbacks,
+        )
 
-            self.model.fit(
-                self.train_ds,
-                epochs=self.epochs,
-                callbacks=callbacks,
-            )
-        else:
-            raise Exception("Model or training dataset are not defined")
+    def evaluate(self, model: tf.keras.Model):
+        model.evaluate(self.train_ds, return_dict=True)
 
-    def evaluate(self):
-        if self.model and self.train_ds:
-            self.model.evaluate(self.train_ds, return_dict=True)
-        else:
-            raise Exception("Model or training dataset are not defined")
-
-    def save(self, filename):
-        if self.model:
-            self.model.save(filename)
-        else:
-            raise Exception("Model not defined")
+    def save(self, model: tf.keras.Model, filename: str):
+        model.save(filename)
 
 
 # Store the MIDI files from the MEASTRO dataset in a list
 data_dir = pathlib.Path("../data/maestro-v3.0.0")
 filenames = glob.glob(str(data_dir / "**/*.mid*"))
 
-model = MusicGenerationRNN(filenames)
+model_wrapper = MusicGenerationRNN(filenames)
 # Create the training set
-model.create_training_set()
+model_wrapper.create_training_set()
 # Create and compile the model
-model.create_model()
+model = model_wrapper.create_model()
 # Train the model using the training set
-model.train()
+model_wrapper.train(model)
 # Evaluate the model
-model.evaluate()
+model_wrapper.evaluate(model)
 # Save the model
-model.save("music_model.h5")
+model_wrapper.save(model, "music_model.h5")
