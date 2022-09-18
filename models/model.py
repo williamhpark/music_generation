@@ -46,7 +46,7 @@ def midi_to_notes(midi_file: str) -> pd.DataFrame:
 def notes_to_midi(
     notes: pd.DataFrame,
     out_file: str,
-    instrument_name: str,
+    instrument_name: str = "Acoustic Grand Piano",
     velocity: int = 100,  # note loudness
 ) -> pretty_midi.PrettyMIDI:
     """Generates a MIDI file from a dataframe of notes
@@ -80,7 +80,7 @@ def notes_to_midi(
         prev_start = start
 
     pm.instruments.append(instrument)
-    pm.write(out_file)
+    pm.write("{out_file}".format(out_file=out_file))
 
     return pm
 
@@ -106,7 +106,7 @@ class MusicGenerationRNN:
         epochs: int = 50,
     ):
         self.filenames = filenames  # Filenames for MIDI files to process
-        self.seed = seed  # Sampling
+        self.seed = seed  # Random seed value
         self.sampling_rate = sampling_rate  # Sampling rate for audio playback
         self.num_files = num_files  # Number of MIDI files to process
         self.seq_length = seq_length  # Length of audio sequence
@@ -246,7 +246,7 @@ class MusicGenerationRNN:
 
 
 # Store the MIDI files from the MEASTRO dataset in a list
-data_dir = pathlib.Path("../data/maestro-v3.0.0")
+data_dir = pathlib.Path("data/maestro-v3.0.0")
 filenames = glob.glob(str(data_dir / "**/*.mid*"))
 
 model_wrapper = MusicGenerationRNN(filenames)

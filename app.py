@@ -66,7 +66,7 @@ def generate_predictions(
     vocab_size: int = 128,
     temperature: float = 2.0,
     num_predictions: int = 120,
-):
+) -> pd.DataFrame:
     key_order = ["pitch", "step", "duration"]
 
     raw_notes = midi_to_notes(file)
@@ -103,11 +103,19 @@ def predict():
         generate = request.form["submit-btn"]
 
         if generate == "Generate":
+            # Generate predictions based off of a random MIDI sample in the dataset
             filenames_index = randrange(len(filenames))
             predictions = generate_predictions(filenames[filenames_index], music_model)
-            print("Generate")
-            print(filenames_index)
-            print(predictions)
+            predictions.head()
+
+            # Convert the predictions to a MIDI file and export as a MIDI
+            generated_filename = "midi_{filenames_index}".format(
+                filenames_index=filenames_index
+            )
+            notes_to_midi(
+                predictions,
+                generated_filename,
+            )
 
     return render_template("index.html", prediction=prediction)
 
