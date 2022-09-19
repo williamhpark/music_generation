@@ -1,10 +1,11 @@
 import collections
 import glob
 import numpy as np
+import os
 import pandas as pd
 import pathlib
 import pretty_midi
-import tensorflow as tf
+import shutil
 
 # Returns a list of the MIDI files from the Maestro dataset
 def maestro_filenames() -> list[str]:
@@ -89,7 +90,12 @@ def notes_to_midi(
     pm.instruments.append(instrument)
     pm.write("{out_file}.mid".format(out_file=out_file))
 
-    return pm
-
-
-print(len(maestro_filenames()))
+    # Move the generated file to the server/static folder
+    current_dir = os.getcwd()
+    src_path = "{current_dir}/{out_file}.mid".format(
+        current_dir=current_dir, out_file=out_file
+    )
+    dest_path = "{current_dir}/server/static/{out_file}.mid".format(
+        current_dir=current_dir, out_file=out_file
+    )
+    shutil.move(src_path, dest_path)

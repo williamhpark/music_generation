@@ -8,7 +8,6 @@
       integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
       crossorigin="anonymous"
     />
-    <script type="text/javascript" src="//www.midijs.net/lib/midi.js"></script>
   </head>
 
   <body>
@@ -28,9 +27,15 @@
       />
     </form>
 
-    {% if plotted_notes %} <img src=\'data:image/png;base64,{{plotted_notes}}\'>
-    {% endif %} {% if midi_file %}
-    <a href="#" onClick="MIDIjs.play({{midi_file}});">Play</a>
+    {% if output_filename %}
+    <div class="text-center mt-5">
+      <audio controls>
+        <source
+          src="{{url_for('static', filename=output_filename)}}.wav"
+          type="audio/wav"
+        />
+      </audio>
+    </div>
     {% endif %}
   </body>
 </html>
