@@ -5,7 +5,7 @@ cachetools==5.2.0
 certifi==2022.9.14
 charset-normalizer==2.1.1
 click==8.1.3
-Flask @ file:///opt/conda/conda-bld/flask_1648041541647/work
+Flask==2.2.2
 flatbuffers==2.0.7
 gast==0.4.0
 google-auth==2.11.0
@@ -50,6 +50,6 @@ tensorflow-metal==0.6.0
 termcolor==2.0.1
 typing_extensions==4.3.0
 urllib3==1.26.12
-Werkzeug @ file:///opt/conda/conda-bld/werkzeug_1645628268370/work
+Werkzeug==2.2.2
 wrapt==1.14.1
 zipp==3.8.1
