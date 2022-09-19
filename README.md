@@ -8,6 +8,8 @@ My recent project of learning to produce music using the Ableton DAW has been a 
 
 ### Live URL
 
+https://music-generation-rnn.herokuapp.com/ (currently undergoing maintenance, the model seems to be overloading the Heroku server)
+
 ### Technologies
 
 - TensorFlow
