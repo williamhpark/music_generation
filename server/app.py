@@ -129,6 +129,8 @@ def synthesize_midi(
 
 @app.route("/", methods=["GET", "POST"])
 def predict():
+    output_filename = None
+    
     if request.method == "POST":
 
         generate = request.form["submit-btn"]
