@@ -1,6 +1,8 @@
 absl-py==1.2.0
 astunparse==1.6.3
+Bottleneck==1.3.5
 cachetools==5.2.0
+certifi==2022.9.14
 charset-normalizer==2.1.1
 click @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-quwchbn8/click_1646123324461/work
 Flask @ file:///opt/conda/conda-bld/flask_1648041541647/work
@@ -22,7 +24,7 @@ Markdown==3.4.1
 MarkupSafe @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_12c133f5-0720-4727-9c18-599a3af825723lzwham3/croots/recipe/markupsafe_1654597866058/work
 midi2audio==0.1.1
 mido @ file:///home/conda/feedstock_root/build_artifacts/mido_1628891227174/work
-numexpr @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_08e1f2b1-735c-4635-9755-5afc6d3eb18ew8ilpa0t/croots/recipe/numexpr_1656940301129/work
+numexpr==2.8.3
 numpy==1.23.3
 oauthlib==3.2.1
 opt-einsum==3.3.0
