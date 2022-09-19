@@ -3,7 +3,6 @@ from flask import Flask, render_template, request
 import numpy as np
 import os
 import pandas as pd
-import pretty_midi
 import tensorflow as tf
 
 from midi2audio import FluidSynth
