@@ -4,7 +4,7 @@ Bottleneck==1.3.5
 cachetools==5.2.0
 certifi==2022.9.14
 charset-normalizer==2.1.1
-click @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-quwchbn8/click_1646123324461/work
+click==8.1.3
 Flask @ file:///opt/conda/conda-bld/flask_1648041541647/work
 flatbuffers==2.0.7
 gast==0.4.0
@@ -21,7 +21,7 @@ keras==2.10.0
 Keras-Preprocessing==1.1.2
 libclang==14.0.6
 Markdown==3.4.1
-MarkupSafe @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_12c133f5-0720-4727-9c18-599a3af825723lzwham3/croots/recipe/markupsafe_1654597866058/work
+MarkupSafe==2.1.1
 midi2audio==0.1.1
 mido @ file:///home/conda/feedstock_root/build_artifacts/mido_1628891227174/work
 numexpr==2.8.3
@@ -34,9 +34,9 @@ pretty-midi @ file:///home/conda/feedstock_root/build_artifacts/pretty_midi_1629
 protobuf==3.19.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
-pyparsing @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_3b_3vxnd07/croots/recipe/pyparsing_1661452540919/work
+pyparsing==3.0.9
 python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
-pytz @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_830e8540-4c59-42fe-9515-a6f79c24ff6dh653xa67/croots/recipe/pytz_1654762630628/work
+pytz==2022.2.1
 requests==2.28.1
 requests-oauthlib==1.3.1
 rsa==4.9
