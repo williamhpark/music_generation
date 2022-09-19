@@ -1,25 +1,29 @@
 from flask import Flask, render_template, request
 
-import glob
+import base64
+import fluidsynth
 import numpy as np
 import pandas as pd
-import pathlib
-from random import randrange
 import tensorflow as tf
 
-from models.model import midi_to_notes, notes_to_midi, mse_with_positive_pressure
+from io import BytesIO
+from matplotlib import pyplot as plt
+from random import randrange
+from typing import Optional
+
+from utils.audio import maestro_filenames, midi_to_notes, notes_to_midi
+from utils.loss import mse_with_positive_pressure
 
 app = Flask(__name__)
 
-
+# Load the trained mdoel
 music_model = tf.keras.models.load_model(
     "music_model.h5",
     custom_objects={"mse_with_positive_pressure": mse_with_positive_pressure},
 )
 
-# Number of MIDI files
-data_dir = pathlib.Path("data/maestro-v3.0.0")
-filenames = glob.glob(str(data_dir / "**/*.mid*"))
+# Files from the Maestro dataset used to train and test the model
+filenames = maestro_filenames()
 
 
 def predict_next_note(
@@ -67,6 +71,20 @@ def generate_predictions(
     temperature: float = 2.0,
     num_predictions: int = 120,
 ) -> pd.DataFrame:
+    """_summary_
+
+    Args:
+        file (pd.DataFrame): _description_
+        model (tf.keras.Model): _description_
+        seq_length (int, optional): _description_. Defaults to 25.
+        vocab_size (int, optional): _description_. Defaults to 128.
+        temperature (float, optional): _description_. Defaults to 2.0.
+        num_predictions (int, optional): _description_. Defaults to 120.
+
+    Returns:
+        pd.DataFrame: _description_
+    """
+
     key_order = ["pitch", "step", "duration"]
 
     raw_notes = midi_to_notes(file)
@@ -95,29 +113,64 @@ def generate_predictions(
     return generated_notes
 
 
+def plot_piano_roll(notes: pd.DataFrame, count: Optional[int] = None):
+    """_summary_
+
+    Args:
+        notes (pd.DataFrame): _description_
+        count (Optional[int], optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
+
+    if not count:
+        count = len(notes["pitch"])
+
+    fig = plt.figure(figsize=(20, 4))
+    plot_pitch = np.stack([notes["pitch"], notes["pitch"]], axis=0)
+    plot_start_stop = np.stack([notes["start"], notes["end"]], axis=0)
+    plt.plot(plot_start_stop[:, :count], plot_pitch[:, :count], color="b", marker=".")
+    plt.xlabel("Time [s]")
+    plt.ylabel("Pitch")
+
+    tmpfile = BytesIO()
+    fig.savefig(tmpfile, format="png")
+    encoded = base64.b64encode(tmpfile.getvalue()).decode("utf-8")
+
+    return encoded
+
+
 @app.route("/", methods=["GET", "POST"])
 def predict():
-    prediction = None
-
     if request.method == "POST":
+        filenames_index = None
+        plotted_notes = None
+
         generate = request.form["submit-btn"]
 
         if generate == "Generate":
             # Generate predictions based off of a random MIDI sample in the dataset
             filenames_index = randrange(len(filenames))
-            predictions = generate_predictions(filenames[filenames_index], music_model)
-            predictions.head()
+            generated_notes = generate_predictions(
+                filenames[filenames_index], music_model
+            )
+
+            # Generate a plot of the genrated notes
+            plotted_notes = plot_piano_roll(generated_notes)
 
             # Convert the predictions to a MIDI file and export as a MIDI
             generated_filename = "midi_{filenames_index}".format(
                 filenames_index=filenames_index
             )
             notes_to_midi(
-                predictions,
+                generated_notes,
                 generated_filename,
             )
 
-    return render_template("index.html", prediction=prediction)
+    return render_template(
+        "index.html", plotted_notes=plotted_notes, filenames_index=filenames_index
+    )
 
 
 if __name__ == "__main__":
