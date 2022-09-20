@@ -1,4 +1,4 @@
-## Music Generation Project
+# Music Generating Neural Network
 
 ### Summary
 
@@ -10,7 +10,9 @@ My recent project of learning to produce music using the Ableton DAW has been a 
 
 https://music-generation-rnn.herokuapp.com/ (currently undergoing maintenance, the model seems to be overloading the Heroku server)
 
-Here's a demonstration of the web UI's functionality:
+Here's a demonstration of the web UI's functionality (sound on):
+
+https://user-images.githubusercontent.com/53918631/191257297-5bcafe82-c7ae-47cf-b178-320d4d956b62.mov
 
 ### Technologies
 
