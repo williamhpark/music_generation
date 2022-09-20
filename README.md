@@ -10,6 +10,8 @@ My recent project of learning to produce music using the Ableton DAW has been a 
 
 https://music-generation-rnn.herokuapp.com/ (currently undergoing maintenance, the model seems to be overloading the Heroku server)
 
+Here's a demonstration of the web UI's functionality:
+
 ### Technologies
 
 - TensorFlow
@@ -18,12 +20,13 @@ https://music-generation-rnn.herokuapp.com/ (currently undergoing maintenance, t
 
 ### Next Steps
 
+- Fix the live URL
 - Improve the frontend UI, possibly with the help of a frontend library (e.g. React)
-- Experiment with tuning the parameters (i.e. learning rate, epochs, loss weights, etc) for lower total loss
+- Experiment with tuning the parameters (i.e. learning rate, epochs, loss weights, etc) for lower total loss and better "musicality"
 - Deploy and train the model on a cloud service (e.g. Amazon SageMaker)
 - Allow the user to customize the melody, e.g. length, speed
 - Allow the user to generate melodies based on a selected genre (this would require the use of a different dataset where genre metadata is available)
-- Explore usig GANs for music generation
+- Explore using GANs for music generation
 
 ### References
 
