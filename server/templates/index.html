@@ -8,34 +8,35 @@
       integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainpage.css') }}" />
   </head>
 
-  <body>
-    <h1 class="text-center mt-5">Music Generation</h1>
+  <body style="background-color: #ffdfbf">
+    <div class="vertical-center">
+      <h1>Music Generation</h1>
 
-    <p class="text-center mt-5">
-      Click the button below to generate a unique melody created using a
-      Recurrent Neural Network (RNN) trained using the Maestro dataset
-    </p>
+      <p class="mt-2">
+        Click the button below to generate a unique melody created using a
+        Recurrent Neural Network (RNN) trained using the Maestro dataset
+      </p>
 
-    <form class="text-center mt-5" action="/" , method="post">
-      <input
-        class="btn btn-primary"
-        type="submit"
-        name="submit-btn"
-        value="Generate"
-      />
-    </form>
-
-    {% if output_filename %}
-    <div class="text-center mt-5">
-      <audio controls>
-        <source
-          src="{{url_for('static', filename=output_filename)}}.wav"
-          type="audio/wav"
+      <form class="mt-5" action="/" , method="post">
+        <input
+          class="btn btn-primary"
+          type="submit"
+          name="submit-btn"
+          value="Generate"
         />
-      </audio>
-    </div>
-    {% endif %}
+      </form>
+
+      <div class="mt-5">
+        <audio controls>
+          <source
+            src="{{url_for('static', filename=output_filename)}}.wav"
+            type="audio/wav"
+          />
+        </audio>
+      </div>
+    <div>
   </body>
 </html>
