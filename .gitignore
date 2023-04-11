@@ -1,2 +1,10 @@
-/training_checkpoints
-.DS_Store
+# Project directories
+/project/training_checkpoints
+/project/server/static
+
+# Environment
+__pycache__
+/.venv
+
+# Miscellaneous
+**/.DS_Store
