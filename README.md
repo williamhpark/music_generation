@@ -1,4 +1,4 @@
-# Music Generating Neural Network
+# Music Generating Recurrent Neural Network
 
 ### Summary
 
