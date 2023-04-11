@@ -8,7 +8,7 @@ My recent project of learning to produce music using the Ableton DAW has been a 
 
 ### Demonstration
 
-The thought process behind the RNN model code is outlined in [this notebook](https://github.com/williamhpark/music_generation/blob/main/Music_Generating_Recurrent_Neural_Network.ipynb), which can be ran in Google Colab.
+To see how the RNN model pipeline was built, refer to [this Colab notebook](https://github.com/williamhpark/music_generation/blob/main/Music_Generating_Recurrent_Neural_Network.ipynb), which can be ran in Google Colab.
 
 Here's a demonstration of the web UI's functionality (sound on). The model currently requires more tuning to make the melodies sound more "musical":
 
